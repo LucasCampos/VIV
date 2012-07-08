@@ -12,10 +12,10 @@ HEADERS = include/polygon.h include/precision.h include/vectorND.h
 OBJECTS = $(SOURCES:.cpp=.o)
 
 $(EXECS): $(OBJECTS)
-	$(CC) $(OBJECTS) -o $@ $(LIBS)
+	$(CC) $(OBJECTS) -o $@ $(LIBS) -O3
 
 .cpp.o: $(HEADERS)
-	$(CC) -c $(SOURCES) $(LIBS)
+	$(CC) -c $(SOURCES) $(LIBS) -O3
 
 clean:
 	/bin/rm -f *.o *.mod $(EXECS) *.gnu *.sh *.gif
