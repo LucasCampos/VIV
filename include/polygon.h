@@ -6,20 +6,15 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
-
-struct int2{
-	int i,j;
-	int2(): i(0), j(0){};
-	int2(int i1, int i2): i(i1), j(i2){};
-};
-
+#include <GL/glfw.h>
+#include <cmath>
+#include <cstdlib>
 
 class Polygon {
 
 	public:
 		Vector2D _pos;
 		std::vector<Vector2D> _vertex;
-		std::vector<Vector2D> _edges;
 
 		Polygon(Vector2D pos): _pos(pos){};
 		Polygon(){};
@@ -43,25 +38,40 @@ class Polygon {
 				_vertex[i].rotate(angle);
 		}
 
-		void generateEdges() {
-			_edges.clear();
-			const int nVertex =_vertex.size(); 
-			for(int i=0; i<nVertex; i++) {
-				Vector2D T = _vertex[(i+1)%nVertex] - _vertex[i];
-				_edges.push_back(T);
-			}
-		}
-
-
-
 
 };
 
-class Square: public Polygon {
+class DrawablePolygon: public Polygon {
 
 	public:
 
-		Square(){
+		real _red, _green, _blue;
+
+		DrawablePolygon(real red, real green, real blue): _red(red), _green(green), _blue(blue) {};
+		DrawablePolygon(): _red(1.0), _green(1.0), _blue(1.0) {};
+
+		virtual void draw() {
+			
+			int size = _vertex.size();
+			
+			glColor3f(_red, _green, _blue);
+			glBegin(GL_POLYGON);
+
+				for (int i=0; i<size; i++) {
+
+					const Vector2D pV = _pos + _vertex[i];
+					glVertex2f(pV.getX(), pV.getY());
+				}
+
+			glEnd();
+		};
+};
+
+class Square: public DrawablePolygon {
+
+	public:
+
+		Square(real red, real green, real blue): DrawablePolygon (red,green,blue){
 
 			addVertex(Vector2D(-.5,-.5));
 			addVertex(Vector2D(-.5, .5));
@@ -69,27 +79,35 @@ class Square: public Polygon {
 			addVertex(Vector2D( .5,-.5));
 		}
 
-		Square(real size) {
+		Square(real size,real red, real green, real blue): DrawablePolygon (red,green,blue) {
 			addVertex(Vector2D(-size,-size));
 			addVertex(Vector2D(-size, size));
 			addVertex(Vector2D( size, size));
 			addVertex(Vector2D( size,-size));
 		}
 
-		Square(Vector2D pos, real size): Polygon(pos) {
-			addVertex(Vector2D(-size,-size));
-			addVertex(Vector2D(-size, size));
-			addVertex(Vector2D( size, size));
-			addVertex(Vector2D( size,-size));
-		}
+		void draw() {
+			
+			int size = _vertex.size();
+			
+			glColor3f(_red, _green, _blue);
+			glBegin(GL_QUADS);
 
+				for (int i=0; i<size; i++) {
+
+					const Vector2D pV = _pos + _vertex[i];
+					glVertex2f(pV.getX(), pV.getY());
+				}
+
+			glEnd();
+		};
 
 };
 
-class Triangle: public Polygon{
+class Triangle: public DrawablePolygon{
 
 	public:
-		Triangle() { 
+		Triangle(real red, real green, real blue): DrawablePolygon (red,green,blue) {
 			Vector2D T(0,sqrt(3.0)/3.0);
 			addVertex(T);
 			T.rotate(2*pi/3.0);
@@ -98,7 +116,7 @@ class Triangle: public Polygon{
 			addVertex(T);
 		}
 
-		Triangle(real size) { 
+		Triangle(real size,real red, real green, real blue): DrawablePolygon (red,green,blue) {
 			Vector2D T(0,sqrt(3.0)/3.0*size);
 			addVertex(T);
 			T.rotate(2*pi/3.0);
@@ -106,79 +124,45 @@ class Triangle: public Polygon{
 			T.rotate(2*pi/3.0);
 			addVertex(T);
 		}
+		
+		void draw() {
+			
+			int size = _vertex.size();
+			
+			glColor3f(_red, _green, _blue);
+			glBegin(GL_TRIANGLES);
 
-		Triangle(Vector2D pos, real size): Polygon(pos) { 
-			Vector2D T(0,sqrt(3.0)/3.0*size);
-			addVertex(T);
-			T.rotate(2*pi/3.0);
-			addVertex(T);
-			T.rotate(2*pi/3.0);
-			addVertex(T);
-		}
+				for (int i=0; i<size; i++) {
+
+					const Vector2D pV = _pos + _vertex[i];
+					glVertex2f(pV.getX(), pV.getY());
+				}
+
+			glEnd();
+		};
+
 };
 
+class Circulo: public DrawablePolygon {
 
-//////////////////////////////////DECLARACAO DAS FUNCOES AUXILIARES////////////////////////////////////////
-void projectPolygon(const Vector2D& axis, const Polygon& polygon, real* min, real* max);
-bool isOverlapping(const Polygon& poly1, const Polygon& poly2);
-real intervalDistance(real minA, real maxA, real minB, real maxB);
+	public:
+		real _radius;
 
-///////////////////////////////FUNCOES DE AJUDA////////////////////////////
-inline void projectPolygon(const Vector2D& axis, const Polygon& polygon, real* min, real* max) {
-	// To project a point on an axis use the dot product
-	double dot = dotProd(polygon._pos + polygon._vertex[0],axis);
-	*min = dot;
-	*max = dot;
+		Circulo(real radius,real red, real green, real blue): DrawablePolygon (red,green,blue), _radius(radius) {};
+		void draw(){
+			//red, green,  blue
+			glColor3f(_red, _green,  _blue);
+			glBegin(GL_TRIANGLE_FAN);
+				glVertex2f(_pos.getX(), _pos.getY());
 
-	const int nVertex = polygon._vertex.size();
+				const real deltaAngle = (2.0f*3.14159)/(20);
+				for (real angle = 0.0f; angle<=(2.0f*3.14159); angle+=deltaAngle)
+				{
+					glVertex2f(_pos.getX() + cosf(angle) * _radius, _pos.getY() + sinf(angle) * _radius);
+				}
+			glEnd();
 
-	for (int i = 1; i < nVertex; i++) {
-		dot = dotProd(polygon._pos+polygon._vertex[i],axis);
-		if (dot < *min) {
-			*min = dot;
-		} else if (dot> *max) {
-			*max = dot;
-		}
-
-	}
-}
-
-// Calculate the distance between [minA, maxA] and [minB, maxB]
-// The distance will be negative if the intervals overlap
-real intervalDistance(real minA, real maxA, real minB, real maxB) {
-
-	if (minA < minB) {
-		return minB - maxA;
-	} else {
-		return minA - maxB;
-	}
-}
-
-bool isOverlapping(const Polygon& poly1, const Polygon& poly2) {
-
-	const bool overlap = true;
-	const bool notOverlap = false;
-
-	//std::cout << "Entrou em overlaps\n";
-
-	const int nEdges = poly1._edges.size();
-	for (int i=0; i<nEdges; i++) {
-
-		Vector2D axis = poly1._edges[i];
-		axis.normalize();
-
-		real max1,min1;
-		projectPolygon(axis, poly1, &min1, &max1);
-
-		real max2,min2;
-		projectPolygon(axis, poly2, &min2, &max2);
-
-		const real interval = intervalDistance(min1,max1,min2,max2);
-
-	//	std::cout << "Interval = " << interval << std::endl;
-		if (interval>=0) return notOverlap;
-	}
-	return overlap;
-}
+		};
+};
 
 #endif
