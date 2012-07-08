@@ -10,16 +10,16 @@
 using namespace std;
 
 typedef boost::shared_ptr<std::ifstream>  IFStreamPtrType;
-
+typedef boost::shared_ptr<DrawablePolygon>  DrawablePolygonPtrType;
 
 struct polyReader {
 	int _pointsPerPoly;
 	IFStreamPtrType _in;
 	bool _jump;
-	vector<DrawablePolygon> _poly;
+	vector<DrawablePolygonPtrType> _poly;
 
-	polyReader(int points, char* filename, bool jump, vector<DrawablePolygon> poly): 
-		_pointsPerPoly(points), _in(new std::ifstream(filename)) {
+	polyReader(int points, char* filename, bool jump, vector<DrawablePolygonPtrType> poly): 
+		_pointsPerPoly(points), _in(new std::ifstream(filename)), _poly(poly) {
 	};
 
 	void updatePoly() {
@@ -27,24 +27,25 @@ struct polyReader {
 		real x,y;
 		for (int i=0; i<size; i++) {
 			*_in >> x >> y;
-			_poly[i]._pos = Vector2D(x,y);
+			_poly[i]->_pos = Vector2D(x,y);
 			for (int j =0; j<_pointsPerPoly-1; j++) {
 				*_in >> x >> y;
-				_poly[i]._vertex[j] = Vector2D(x,y);
+				_poly[i]->_vertex[j] = Vector2D(x,y);
 			}
 		}
 	};
 
 	void draw() {
 		int size = _poly.size();
+		//cout << size << endl;
 		for (int i=0; i<size; i++) 
-			_poly[i].draw();
+			_poly[i]->draw();
 	}
 	
 	void restart(){
 
-		(*_in).clear();
-		(*_in).seekg(0, ios::beg);
+		_in->clear();
+		_in->seekg(0, ios::beg);
 
 		cout << "Reinicia\n";
 	};
@@ -89,6 +90,8 @@ int main(int argc, char* argv[])
 	Shut_Down(0);
 }
 
+
+
 void pegaParametros(int argc, char* argv[]){
 
 	bool temUm = false;
@@ -104,11 +107,11 @@ void pegaParametros(int argc, char* argv[]){
 			int N = atoi(argv[i+2]);
 			int points = atoi(argv[i+3]);
 
-			vector<DrawablePolygon> p;
+			vector<DrawablePolygonPtrType> p;
 
 			for (int j=0; j<N; j++) {
-				DrawablePolygon polygon(uniform(), uniform(), uniform());
-				polygon._vertex.resize(points);
+				DrawablePolygonPtrType polygon(new DrawablePolygon(uniform(), uniform(), uniform()));
+				polygon->_vertex.resize(points);
 				p.push_back(polygon);
 			}
 
@@ -120,10 +123,10 @@ void pegaParametros(int argc, char* argv[]){
 			char* file = argv[i+1];
 			int N = atoi(argv[i+2]);
 
-			vector<DrawablePolygon> p;
+			vector<DrawablePolygonPtrType> p;
 
 			for (int j=0; j<N; j++) {
-				Square polygon(uniform(), uniform(), uniform());
+				DrawablePolygonPtrType polygon(new Square(uniform(), uniform(), uniform()));
 				p.push_back(polygon);
 			}
 
@@ -135,10 +138,10 @@ void pegaParametros(int argc, char* argv[]){
 			char* file = argv[i+1];
 			int N = atoi(argv[i+2]);
 
-			vector<DrawablePolygon> p;
+			vector<DrawablePolygonPtrType> p;
 
 			for (int j=0; j<N; j++) {
-				Square polygon(uniform(), uniform(), uniform());
+				DrawablePolygonPtrType polygon(new Triangle(uniform(), uniform(), uniform()));
 				p.push_back(polygon);
 			}
 
@@ -151,15 +154,15 @@ void pegaParametros(int argc, char* argv[]){
 			int N = atoi(argv[i+2]);
 			real radius = atof(argv[i+3]);
 
-			vector<DrawablePolygon> p;
+			vector<DrawablePolygonPtrType> p;
 
 			for (int j=0; j<N; j++) {
-				Circle polygon(radius, uniform(), uniform(), uniform());
+				DrawablePolygonPtrType polygon(new Circle(radius, 1.0,1.0,1.0));
 				p.push_back(polygon);
 			}
 
 			poly.push_back(polyReader(1, file, true,p));
-
+	
 			temUm = true;
 
 		} else if (string(argv[i]) == "-d"){
@@ -254,7 +257,8 @@ void Main_Loop(void)
 
 void Draw(void)
 {
-	for (int i=0; i<poly.size(); i++) poly[i].draw();
+	for (int i=0; i<poly.size(); i++) 
+		poly[i].draw();
 	// swap back and front buffers
 	//DrawConnections(distanciaMinima);
 	glFinish();
