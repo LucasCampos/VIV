@@ -29,7 +29,8 @@ struct polyReader {
 			for (int i=0; i<size; i++) {
 				*_in >> x >> y;
 				_poly[i]->_pos = Vector2D(x,y);
-				_poly[i]->_vertex.clear();
+				if(!_in->eof()) 
+					_poly[i]->_vertex.clear();
 				for (int j =0; j<_pointsPerPoly; j++) {
 					*_in >> x >> y;
 					_poly[i]->_vertex.push_back(Vector2D(x,y));
