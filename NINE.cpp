@@ -28,7 +28,7 @@ struct polyReader {
 		for (int i=0; i<size; i++) {
 			*_in >> x >> y;
 			_poly[i]->_pos = Vector2D(x,y);
-			for (int j =0; j<_pointsPerPoly-1; j++) {
+			for (int j =0; j<_pointsPerPoly; j++) {
 				*_in >> x >> y;
 				_poly[i]->_vertex[j] = Vector2D(x,y);
 			}
@@ -326,37 +326,35 @@ void AjudaSimples() {
 
 	cout << "\nLucas Campos, Laboratório de Computação Científica, Departamento de Física, UFPE\n";
 	cout << "Em caso de bugs, por favor mande um email para lqcc@df.ufpe.br\n\n";  
-	cout << "Versão 0.3Beta\n\n";	
+	cout << "Versao 1.0Beta\n\n";	
 	std::cout << "Comandos: \n\n";
 	std::cout << " -h\n\tMostra o diálogo de ajuda\n\n"; 
 	std::cout << " -H\n\tMostra o diálogo de ajuda extenso\n\n";
 	std::cout << " -E\n\tMostra o diálogo de ajuda extenso com um exemplo de arquivo\n\n";
-	std::cout << " -a NomeDoArquivo Quantidade Raio \n\tAdiciona um novo tipo que se move (ex: Partículas de Yukawa)\n\n";
-	std::cout << " -c NomeDoArquivo Quantidade Raio \n\tAdiciona um novo tipo que não de move (ex: Pinnings)\n\n";
+	std::cout << " -p filename Quantidade Pontos\n\tAdiciona um novo tipo de poligono, com Quantidade poligonos por frame e Pontos vertices por poligono. A primeira linha de cada poligono sera o centr. O arquivo deve ter entao Pontos+1 linhas por poligono\n\n";
+	std::cout << " -s filename Quantidade\n\tAdiciona um novo tipo de quadrado, com Quantidade quadrados por frame. A cada quadrado deve ser associado 5 linhas do arquivo\n\n";
+	std::cout << " -t filename Quantidade\n\tAdiciona um novo tipo de triangulo, com Quantidade triangulos por frame. A cada triangulo deve ser associado 4 linhas do arquivo\n\n";
+	std::cout << " -s filename Quantidade Raio\nAdiciona um novo tipo de circulo, com Quantidade circulos por frame. A cada circulo deve ser associado 1 linha do arquivo\t\n\n";
 	std::cout << " -d Delay\n\tEscolhe um delay. Delays menores oferecem visualizações mais rápidas. Por padrão é 0.001\n\n";
-	std::cout << " -b Box\n\tEscolhe o tamanho da caixa. Por padrão é 10\n\n";
-	std::cout << " -v Vertices\n\tEscolhe o número de vértices por partícula. Por padrão, 20\n\n";
-	std::cout << " -e Extended Box\n\tA caixa vai de -box a box, ao invés de 0 a box. Por padrão, false\n\n";
-	std::cout << " -j Jump\n\tSe true, pula uma linha entre os frames. Por padrão, true\n\n";
-	std::cout << " -r Distancia Minima\n\tDesenha liga��es caso as part�culas tenha distancia menor que a distancia minimia\n\n";
+	std::cout << " -b Box\n\tEscolhe o tamanho da caixa. Por padrao e 10\n\n";
+	std::cout << " -e Extended Box\n\tA caixa vai de 0 a box, ao inves de -box a box.\n\n";
+	std::cout << " -j Jump\n\tAdicione caso nao seja necessario pular uma linha entre os frames.\n\n";
 }
 
 void AjudaGrande() {
 
 
 	AjudaSimples();
-	cout << "\nO programa deve ter ao menos um tipo móvel\n";
-	cout << "Para adicionar um novo tipo, a sintaxe é:\n";
-	cout << " -a NomeDoArquivo Quantidade Raio\nou\n";
-	cout << " -c NomeDoArquivo Quantidade Raio\n\n";
+	cout << "\nO programa deve ter ao menos um tipo de poligono\n";
+	cout << "Para adicionar um novo tipo, a sintaxe e:\n";
+	cout << " -s NomeDoArquivo Quantidade Raio\nou\n";
 	cout << "Por Exemplo:\n";
-	cout << " -a transRusso.dat 352 0.5\n";
-	cout << " -c pinnings.dat 64 0.3\n\n";
+	cout << " -s transRusso.dat 352 0.5\n";
 
 	cout << "Um exemplo de uso:\n";
-	cout << "\tnine -a transannealingDuro.dat 351 0.5 -a transannealingRusso.dat 1 0.5 -b 40\n";
+	cout << "\tnine -s transannealingDuro.dat 351 0.5 -s transannealingRusso.dat 1 0.5 -b 40\n";
 
-	cout << "\nNINE requer que o OpenGL e o GLFW estejam instalados.\n";
+	cout << "\nNINE requer que o Boost, OpenGL e o GLFW estejam instalados.\n";
 
 }
 
@@ -364,7 +362,7 @@ void AjudaGrandeComExemplo() {
 
 	AjudaGrande();
 	cout << "\nOs arquivos devem estar organizado em duas colunas, x e y.\n";
-	cout << "Caso -j não esteja definido, deven haver uma linha em branco entre os as coordenadas de cada frame.\n\n";
+	cout << "Caso -j nao esteja definido, deve haver uma linha em branco entre os as coordenadas de cada frame.\n\n";
 
 	cout << "2.5219482421875e+01   3.6102264404297e+01      \\\n";  
 	cout << "1.5872397422791e+01   3.0927572250366e+01      |\n";
