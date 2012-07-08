@@ -9,6 +9,8 @@
 
 using namespace std;
 
+bool parar = false;
+
 typedef boost::shared_ptr<std::ifstream>  IFStreamPtrType;
 typedef boost::shared_ptr<DrawablePolygon>  DrawablePolygonPtrType;
 
@@ -25,26 +27,28 @@ struct polyReader {
 	void updatePoly() {
 		int size = _poly.size();
 		real x,y;
-		if(!_in->eof()) {
-			for (int i=0; i<size; i++) {
-				*_in >> x >> y;
+		for (int i=0; i<size; i++) {
+			*_in >> x >> y;
+			bool notEnd = (x != 0) && (y != 0);
+			if (notEnd) {
 				_poly[i]->_pos = Vector2D(x,y);
-				if(!_in->eof()) 
-					_poly[i]->_vertex.clear();
-				for (int j =0; j<_pointsPerPoly; j++) {
-					*_in >> x >> y;
+				_poly[i]->_vertex.clear();
+			}
+			for (int j =0; j<_pointsPerPoly; j++) {
+				*_in >> x >> y;
+				if(notEnd) 
 					_poly[i]->_vertex.push_back(Vector2D(x,y));
-				}
 			}
 		}
 	};
+
 
 	void draw() {
 		int size = _poly.size();
 		//cout << size << endl;
 		for (int i=0; i<size; i++) 
 			_poly[i]->draw();
-	}
+	};
 	
 	void restart(){
 
@@ -63,7 +67,6 @@ int window_height = 800;
 int timeOut = 600;
 int timeZero = 0;
 double delay = 0.01;
-bool parar = false;
 bool jump = true;
 bool extendedBox = true;
 int counter = 0;
@@ -114,7 +117,8 @@ void pegaParametros(int argc, char* argv[]){
 			vector<DrawablePolygonPtrType> p;
 
 			for (int j=0; j<N; j++) {
-				DrawablePolygonPtrType polygon(new DrawablePolygon(uniform(), uniform(), uniform()));
+				//DrawablePolygonPtrType polygon(new DrawablePolygon(uniform(), uniform(), uniform()));
+				DrawablePolygonPtrType polygon(new DrawablePolygon(1.0, 1.0, 1.0));
 				polygon->_vertex.resize(points);
 				p.push_back(polygon);
 			}
@@ -130,7 +134,7 @@ void pegaParametros(int argc, char* argv[]){
 			vector<DrawablePolygonPtrType> p;
 
 			for (int j=0; j<N; j++) {
-				DrawablePolygonPtrType polygon(new Square(1.0, 1.0,1.0));
+				DrawablePolygonPtrType polygon(new Square(1.0, .0,.0));
 				//DrawablePolygonPtrType polygon(new Square(uniform(), uniform(), uniform()));
 				p.push_back(polygon);
 			}
@@ -146,7 +150,7 @@ void pegaParametros(int argc, char* argv[]){
 			vector<DrawablePolygonPtrType> p;
 
 			for (int j=0; j<N; j++) {
-				DrawablePolygonPtrType polygon(new Triangle(uniform(), uniform(), uniform()));
+				DrawablePolygonPtrType polygon(new Triangle(0, 1.0, 1.0));
 				p.push_back(polygon);
 			}
 
@@ -162,7 +166,7 @@ void pegaParametros(int argc, char* argv[]){
 			vector<DrawablePolygonPtrType> p;
 
 			for (int j=0; j<N; j++) {
-				DrawablePolygonPtrType polygon(new Circle(radius, 1.0,1.0,1.0));
+				DrawablePolygonPtrType polygon(new Circle(radius, 1.0,.0,.0));
 				p.push_back(polygon);
 			}
 
