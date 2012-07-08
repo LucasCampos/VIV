@@ -143,12 +143,12 @@ class Triangle: public DrawablePolygon{
 
 };
 
-class Circulo: public DrawablePolygon {
+class Circle: public DrawablePolygon {
 
 	public:
 		real _radius;
 
-		Circulo(real radius,real red, real green, real blue): DrawablePolygon (red,green,blue), _radius(radius) {};
+		Circle(real radius,real red, real green, real blue): DrawablePolygon (red,green,blue), _radius(radius) {};
 		void draw(){
 			//red, green,  blue
 			glColor3f(_red, _green,  _blue);
