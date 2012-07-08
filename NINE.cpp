@@ -25,12 +25,15 @@ struct polyReader {
 	void updatePoly() {
 		int size = _poly.size();
 		real x,y;
-		for (int i=0; i<size; i++) {
-			*_in >> x >> y;
-			_poly[i]->_pos = Vector2D(x,y);
-			for (int j =0; j<_pointsPerPoly; j++) {
+		if(!_in->eof()) {
+			for (int i=0; i<size; i++) {
 				*_in >> x >> y;
-				_poly[i]->_vertex[j] = Vector2D(x,y);
+				_poly[i]->_pos = Vector2D(x,y);
+				_poly[i]->_vertex.clear();
+				for (int j =0; j<_pointsPerPoly; j++) {
+					*_in >> x >> y;
+					_poly[i]->_vertex.push_back(Vector2D(x,y));
+				}
 			}
 		}
 	};
@@ -126,11 +129,12 @@ void pegaParametros(int argc, char* argv[]){
 			vector<DrawablePolygonPtrType> p;
 
 			for (int j=0; j<N; j++) {
-				DrawablePolygonPtrType polygon(new Square(uniform(), uniform(), uniform()));
+				DrawablePolygonPtrType polygon(new Square(1.0, 1.0,1.0));
+				//DrawablePolygonPtrType polygon(new Square(uniform(), uniform(), uniform()));
 				p.push_back(polygon);
 			}
 
-			poly.push_back(polyReader(5, file, true,p));
+			poly.push_back(polyReader(4, file, true,p));
 
 			temUm = true;
 
@@ -145,7 +149,7 @@ void pegaParametros(int argc, char* argv[]){
 				p.push_back(polygon);
 			}
 
-			poly.push_back(polyReader(4, file, true,p));
+			poly.push_back(polyReader(3, file, true,p));
 
 			temUm = true;
 

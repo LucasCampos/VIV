@@ -26,11 +26,6 @@ class Polygon {
 			_pos += T;
 		}
 
-		void writeOnFile(std::ofstream& file) const {
-			const int nVertex =_vertex.size(); 
-			for(int i=0; i<nVertex; i++) 
-				file << _vertex[i].getX() + _pos.getX() << "   " << _vertex[i].getY() + _pos.getY() << std::endl;
-		}
 
 		void rotate(real angle){
 			const int nVertex =_vertex.size(); 
@@ -93,8 +88,11 @@ class Square: public DrawablePolygon {
 			glColor3f(_red, _green, _blue);
 			glBegin(GL_QUADS);
 
-				for (int i=0; i<size; i++) {
+			//std::cout << _pos.getX() << "  " <<_pos.getY() << "  size: " << _vertex.size() << std::endl<< std::endl;
 
+				for (int i=0; i<size; i++) {
+					
+					//std::cout << _vertex[i].getX() << "  " <<_vertex[i].getY() << std::endl;
 					const Vector2D pV = _pos + _vertex[i];
 					glVertex2f(pV.getX(), pV.getY());
 				}
