@@ -170,7 +170,7 @@ void pegaParametros(int argc, char* argv[]){
 				p.push_back(polygon);
 			}
 
-			poly.push_back(polyReader(1, file, true,p));
+			poly.push_back(polyReader(0, file, true,p));
 	
 			temUm = true;
 
