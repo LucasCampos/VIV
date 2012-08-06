@@ -29,15 +29,17 @@ struct polyReader {
 		real x,y;
 		for (int i=0; i<size; i++) {
 			*_in >> x >> y;
-			bool notEnd = (x != 0) && (y != 0);
-			if (notEnd) {
+			bool isEnd = ((x == 0) && (y == 0)) || _in->eof();
+			//if (((x == 0) && (y == 0)) || _in->eof()) exit(0);
+			if (!isEnd){
 				_poly[i]->_pos = Vector2D(x,y);
 				_poly[i]->_vertex.clear();
-			}
-			for (int j =0; j<_pointsPerPoly; j++) {
-				*_in >> x >> y;
-				if(notEnd) 
-					_poly[i]->_vertex.push_back(Vector2D(x,y));
+				for (int j =0; j<_pointsPerPoly; j++) {
+					*_in >> x >> y;
+					isEnd = ((x == 0) && (y == 0)) || _in->eof();
+					if (!isEnd) 
+						_poly[i]->_vertex.push_back(Vector2D(x,y));
+				}
 			}
 		}
 	};
