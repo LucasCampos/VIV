@@ -6,6 +6,7 @@
 #include <vector>
 #include <boost/shared_ptr.hpp>
 #include "include/polygon.h"
+#include "include/colorPicker.h"
 
 using namespace std;
 
@@ -117,10 +118,12 @@ void pegaParametros(int argc, char* argv[]){
 			int points = atoi(argv[i+3]);
 
 			vector<DrawablePolygonPtrType> p;
+			Color c = ColorPicker::getColor();
+
 
 			for (int j=0; j<N; j++) {
 				//DrawablePolygonPtrType polygon(new DrawablePolygon(uniform(), uniform(), uniform()));
-				DrawablePolygonPtrType polygon(new DrawablePolygon(1.0, 1.0, 1.0));
+				DrawablePolygonPtrType polygon(new DrawablePolygon(c.red, c.green, c.blue));
 				polygon->_vertex.resize(points);
 				p.push_back(polygon);
 			}
@@ -134,9 +137,10 @@ void pegaParametros(int argc, char* argv[]){
 			int N = atoi(argv[i+2]);
 
 			vector<DrawablePolygonPtrType> p;
+			Color c = ColorPicker::getColor();
 
 			for (int j=0; j<N; j++) {
-				DrawablePolygonPtrType polygon(new Square(1.0, .0,.0));
+				DrawablePolygonPtrType polygon(new Square(c.red, c.green,c.blue));
 				//DrawablePolygonPtrType polygon(new Square(uniform(), uniform(), uniform()));
 				p.push_back(polygon);
 			}
@@ -150,9 +154,11 @@ void pegaParametros(int argc, char* argv[]){
 			int N = atoi(argv[i+2]);
 
 			vector<DrawablePolygonPtrType> p;
+			Color c = ColorPicker::getColor();
+
 
 			for (int j=0; j<N; j++) {
-				DrawablePolygonPtrType polygon(new Triangle(0, 1.0, 1.0));
+				DrawablePolygonPtrType polygon(new Triangle(c.red, c.green, c.blue));
 				p.push_back(polygon);
 			}
 
@@ -166,9 +172,10 @@ void pegaParametros(int argc, char* argv[]){
 			real radius = atof(argv[i+3]);
 
 			vector<DrawablePolygonPtrType> p;
+			Color c = ColorPicker::getColor();
 
 			for (int j=0; j<N; j++) {
-				DrawablePolygonPtrType polygon(new Circle(radius, 1.0,.0,.0));
+				DrawablePolygonPtrType polygon(new Circle(radius, c.red,c.green,c.blue));
 				p.push_back(polygon);
 			}
 
