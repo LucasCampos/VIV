@@ -20,8 +20,8 @@ class ColorPicker{
 				return Color(1.0,0,0);
 				break;
 			case 1: 
-				return Color(0.0,1.0,.0);
 				current++;
+				return Color(0.0,1.0,.0);
 				break;
 			case 2: 
 				current++;
