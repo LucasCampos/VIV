@@ -5,7 +5,7 @@ SHELL       = /bin/sh
 
 CFLAGS  = -std=c++0x
 FOLDERS =
-LIBS = -lglfw -lGL -lrt -lXrandr  -lrt -lX11 -lGLU   -lGL -pthread -lm 
+LIBS = -lglfw -lGL -lrt -lX11 -lGLU   -lGL -pthread -lm 
 
 EXECS = nine
 SOURCES = NINE.cpp
