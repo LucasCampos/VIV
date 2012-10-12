@@ -5,8 +5,8 @@ SHELL       = /bin/sh
 
 CFLAGS  = -std=c++0x
 FOLDERS =
-LIBS = -lglfw -lGL 
 
+LIBS = -lglfw -lGL 
 EXECS = nine
 SOURCES = NINE.cpp
 HEADERS = include/polygon.h include/precision.h include/vectorND.h
