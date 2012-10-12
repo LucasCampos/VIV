@@ -23,7 +23,7 @@ struct polyReader {
 
 	polyReader(int points, char* filename, bool jump, vector<DrawablePolygonPtrType> poly): 
 		_pointsPerPoly(points), _in(new std::ifstream(filename)), _poly(poly) {
-	};
+		};
 
 	void updatePoly() {
 		int size = _poly.size();
@@ -52,7 +52,7 @@ struct polyReader {
 		for (int i=0; i<size; i++) 
 			_poly[i]->draw();
 	};
-	
+
 	void restart(){
 
 		_in->clear();
@@ -180,7 +180,7 @@ void pegaParametros(int argc, char* argv[]){
 			}
 
 			poly.push_back(polyReader(0, file, true,p));
-	
+
 			temUm = true;
 
 		} else if (string(argv[i]) == "-d"){
@@ -231,7 +231,6 @@ void Init(void)
 		Shut_Down(1);
 	glfwSetWindowTitle("VIV - VIV Is a Visualizer");
 	glfwSetWindowSizeCallback( TamanhoJanela );
-	glMatrixMode(GL_PROJECTION);
 	glfwSetKeyCallback( keyhandler );
 	glViewport(0, 0, (GLsizei)window_width, (GLsizei)window_height);
 	glLoadIdentity();
@@ -243,6 +242,7 @@ void Init(void)
 	}
 
 	glMatrixMode(GL_MODELVIEW);
+	glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
 	glDisable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -258,17 +258,14 @@ void Main_Loop(void)
 {
 	while (true) 
 	{
+		glClear(GL_COLOR_BUFFER_BIT);
 		if (!parar)
 			for (int i=0; i<poly.size(); i++)
 				poly[i].updatePoly();
 
-		glfwSleep(delay);
 		// clear the buffer
-		glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
-		glClear(GL_COLOR_BUFFER_BIT);
 		// draw the figure
 		if ((time(NULL) - timeZero) > timeOut) Shut_Down(0);
-		glLoadIdentity();
 		Draw();
 	}
 }
@@ -281,27 +278,8 @@ void Draw(void)
 	//DrawConnections(distanciaMinima);
 	glFinish();
 	glfwSwapBuffers();
+	glfwSleep(delay);
 }
-/*
-void DrawConnections (real param){
-
-	real param2=param*param;
-	glColor3f(1.0f,1.0f,1.0f);		
-	for (int i=0; i<Ntotal; i++){
-		for (int j=i+1; j<Ntotal; j++){
-			real delx = circulos[i].getX() - circulos[j].getX();
-			real dely = circulos[i].getY() - circulos[j].getY();
-			real r2 = delx*delx + dely*dely;
-			if (r2 <= param2) {
-				glBegin(GL_LINES);
-				glVertex2f(circulos[i].getX(), circulos[i].getY());
-				glVertex2f(circulos[j].getX(), circulos[j].getY());
-				glEnd();
-			}
-		}
-	}
-}
-*/
 
 void GLFWCALL keyhandler( int key, int action )
 {
