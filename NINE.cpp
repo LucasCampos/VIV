@@ -322,7 +322,7 @@ void AjudaSimples() {
 
 	cout << "\nLucas Campos, Laboratório de Computação Científica, Departamento de Física, UFPE\n";
 	cout << "Em caso de bugs, por favor mande um email para lqcc@df.ufpe.br\n\n";  
-	cout << "Versao 1.0Beta\n\n";	
+	cout << "Versao 1.01Beta\n\n";	
 	std::cout << "Comandos: \n\n";
 	std::cout << " -h\n\tMostra o diálogo de ajuda\n\n"; 
 	std::cout << " -H\n\tMostra o diálogo de ajuda extenso\n\n";
@@ -330,7 +330,7 @@ void AjudaSimples() {
 	std::cout << " -p filename Quantidade Pontos\n\tAdiciona um novo tipo de poligono, com Quantidade poligonos por frame e Pontos vertices por poligono. A primeira linha de cada poligono sera o centr. O arquivo deve ter entao Pontos+1 linhas por poligono\n\n";
 	std::cout << " -s filename Quantidade\n\tAdiciona um novo tipo de quadrado, com Quantidade quadrados por frame. A cada quadrado deve ser associado 5 linhas do arquivo\n\n";
 	std::cout << " -t filename Quantidade\n\tAdiciona um novo tipo de triangulo, com Quantidade triangulos por frame. A cada triangulo deve ser associado 4 linhas do arquivo\n\n";
-	std::cout << " -s filename Quantidade Raio\nAdiciona um novo tipo de circulo, com Quantidade circulos por frame. A cada circulo deve ser associado 1 linha do arquivo\t\n\n";
+	std::cout << " -c filename Quantidade Raio\nAdiciona um novo tipo de circulo, com Quantidade circulos por frame. A cada circulo deve ser associado 1 linha do arquivo\t\n\n";
 	std::cout << " -d Delay\n\tEscolhe um delay. Delays menores oferecem visualizações mais rápidas. Por padrão é 0.001\n\n";
 	std::cout << " -b Box\n\tEscolhe o tamanho da caixa. Por padrao e 10\n\n";
 	std::cout << " -e Extended Box\n\tA caixa vai de 0 a box, ao inves de -box a box.\n\n";
