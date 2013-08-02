@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include "include/polygon.h"
 #include "include/colorPicker.h"
 
@@ -12,8 +12,8 @@ using namespace std;
 
 bool stopped = false;
 
-typedef boost::shared_ptr<std::ifstream>  IFStreamPtrType;
-typedef boost::shared_ptr<DrawablePolygon>  DrawablePolygonPtrType;
+typedef std::shared_ptr<std::ifstream>  IFStreamPtrType;
+typedef std::shared_ptr<DrawablePolygon>  DrawablePolygonPtrType;
 
 struct polyReader {
 	int _pointsPerPoly;
