@@ -335,7 +335,7 @@ void LargeHelp() {
 	cout << " -c transRusso.dat 352 0.5\n";
 
 	cout << "An example of use:\n";
-	cout << "\tnine -s transannealingDuro.dat 351 0.5 -s transannealingRusso.dat 1 0.5 -b 40\n";
+	cout << "\tviv -c transannealingDuro.dat 351 0.5 -c transannealingRusso.dat 1 0.5 -b 40\n";
 
 	cout << "\nVIV requires Boost, OpenGL and GLFW.\n";
 
