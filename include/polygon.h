@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
-#include <GL/glfw.h>
+#include <GLFW/glfw3.h>
 #include <cmath>
 #include <cstdlib>
 

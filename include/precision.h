@@ -1,6 +1,6 @@
 #ifndef PRECISION_H
 #define PRECISION_H
-#include <GL/glfw.h>
+#include <GLFW/glfw3.h>
 
 #include <cstdlib>
 #define real GLfloat

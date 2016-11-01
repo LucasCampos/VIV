@@ -1,14 +1,17 @@
-#include <GL/glfw.h>
+#include <GLFW/glfw3.h>
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <memory>
+#include <chrono>
+#include <thread>
 #include "include/polygon.h"
 #include "include/colorPicker.h"
 
 using namespace std;
+
 
 bool stopped = false;
 
@@ -69,9 +72,12 @@ int window_width = 800;
 int window_height = 800;
 int timeOut = 600;
 int timeZero = 0;
-double delay = 0.01;
+chrono::milliseconds delay(1);
 bool extendedBox = true;
 int counter = 0;
+
+GLFWwindow* window;
+
 
 vector<polyReader> poly;
 
@@ -80,8 +86,8 @@ void Init(void);
 void Shut_Down(int return_code);
 void Main_Loop(void);
 void Draw(void);
-void GLFWCALL WindowSize( int width, int height );
-void GLFWCALL keyhandler(int key, int action);
+static void WindowSize(GLFWwindow* window,int width, int height );
+static void keyhandler(GLFWwindow* window, int key, int scancode, int action, int mods);
 void TakeParameters(int argc, char* argv[]);
 void SimpleHelp();
 void LargeHelp();
@@ -184,7 +190,7 @@ void TakeParameters(int argc, char* argv[]){
 				cout << "Incomplete -d flag" << endl;
 				exit(1);
 			}
-			delay = atof(argv[i+1]);
+			delay = chrono::milliseconds((int)(100*atof(argv[i+1])));
 
 		} else if (string(argv[i]) == "-b") {
 
@@ -214,14 +220,14 @@ void TakeParameters(int argc, char* argv[]){
 void Init(void)
 {
 
-	if (glfwInit() != GL_TRUE)
+	if (!glfwInit())
 		Shut_Down(1);
-	// 800 x 800, 16 bit color, no depth, alpha or stencil buffers, windowed
-	if (glfwOpenWindow(window_width, window_height, 5, 6, 5, 0, 0, 0, GLFW_WINDOW) != GL_TRUE)
+    window = glfwCreateWindow(window_width, window_height, "VIV - VIV Is a Visualizer", NULL, NULL);
+	if (!window)
 		Shut_Down(1);
-	glfwSetWindowTitle("VIV - VIV Is a Visualizer");
-	glfwSetWindowSizeCallback( WindowSize );
-	glfwSetKeyCallback( keyhandler );
+	glfwSetWindowSizeCallback(window,  WindowSize );
+	glfwSetKeyCallback( window, keyhandler );
+    glfwMakeContextCurrent(window);
 	glViewport(0, 0, (GLsizei)window_width, (GLsizei)window_height);
 	glLoadIdentity();
 
@@ -266,11 +272,12 @@ void Draw(void)
 		poly[i].draw();
 	// swap back and front buffers
 	glFinish();
-	glfwSwapBuffers();
-	glfwSleep(delay);
+	glfwSwapBuffers(window);
+    std::this_thread::sleep_for(delay);
+	glfwPollEvents();
 }
 
-void GLFWCALL keyhandler( int key, int action )
+static void keyhandler(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 
 	if( action != GLFW_PRESS )
@@ -280,7 +287,7 @@ void GLFWCALL keyhandler( int key, int action )
 
 	switch (key)
 	{
-		case GLFW_KEY_ESC:
+		case GLFW_KEY_ESCAPE:
 			Shut_Down(0);
 			break;
 		case 'P':
@@ -293,14 +300,14 @@ void GLFWCALL keyhandler( int key, int action )
 			}
 			break;
 		case 'R':
-			for (int i=0; i<poly.size(); i++)
+			for (unsigned int i=0; i<poly.size(); i++)
 				poly[i].restart();
 
 	}
 }
 
 
-void GLFWCALL WindowSize( int width, int height ){
+void static WindowSize(GLFWwindow* window, int width, int height ){
 
 	window_height = height;
 	window_width = width;
